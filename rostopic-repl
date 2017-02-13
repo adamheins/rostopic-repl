@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import argparse
+import code
 import importlib
 import sys
 
@@ -55,13 +56,14 @@ def subscribe_mode(topic, use_ipython):
 
     msg = listen()
 
-    try:
-        import IPython
-        IPython.embed(banner1='')
-    except ImportError:
-        import code
-        print('\nCould not import IPython. Using standard interpreter.')
-        code.interact(local=locals(), banner='')
+    if use_ipython:
+        try:
+            import IPython
+            IPython.embed(banner1='')
+            return
+        except ImportError:
+            print('\nCould not import IPython. Using standard interpreter.')
+    code.interact(local=locals(), banner='')
 
 
 def publish_mode(topic, use_ipython):
@@ -83,13 +85,14 @@ def publish_mode(topic, use_ipython):
 
     print('Publishing to {}...'.format(topic))
 
-    try:
-        import IPython
-        IPython.embed(banner1='')
-    except ImportError:
-        import code
-        print('\nCould not import IPython. Using standard interpreter.')
-        code.interact(local=locals(), banner='')
+    if use_ipython:
+        try:
+            import IPython
+            IPython.embed(banner1='')
+            return
+        except ImportError:
+            print('\nCould not import IPython. Using standard interpreter.')
+    code.interact(local=locals(), banner='')
 
 
 def main():
