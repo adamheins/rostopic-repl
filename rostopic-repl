@@ -19,6 +19,16 @@ To get more messages, call 'listen(num)', which waits for num messages to
 arrive and then returns a list containing them.
 '''.strip()
 
+PUBLISH_MODE_HELP_TEXT = '''
+You're in a Python REPL set up to publish ROS messages to your topic.
+
+Create a message, then use the function `publish(msg)` to publish it. Common
+message packages have already been imported for your convenience:
+    std_msgs.msg as std
+    geometry_msgs.msg as geo
+    sensor_msgs.msg as sensor
+'''.strip()
+
 
 def subscribe_mode(topic, use_ipython):
     ''' Subscribe mode. REPL for receiving messages from a topic. '''
@@ -81,7 +91,7 @@ def publish_mode(topic, use_ipython):
         publisher.publish(msg)
 
     def help():
-        print('Not yet implemented.')
+        print(PUBLISH_MODE_HELP_TEXT)
 
     print('Publishing to {}...'.format(topic))
 
