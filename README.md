@@ -26,9 +26,9 @@ done.
 >>>
 ```
 
-You are now in the Python interactive interpreter. You're newly received
-message is stored in the variable `msg`. You can now inspect and play with it
-using the power of Python.
+You are now in the Python interactive interpreter. Your newly received message
+is stored in the variable `msg`. You can now inspect and play with it using the
+power of Python.
 
 Here's simple example of inspecting some properties of an `Image` message:
 
@@ -53,7 +53,7 @@ frame_id: camera_rgb_optical_frame
 ```
 
 ### Publish Mode
-Publish mode is activated by passing the `-p` flag:
+Publish mode is activated by passing the `-p` flag on the command line:
 
 ```
 ./rostopic-repl -p [topic]
@@ -88,10 +88,10 @@ Publishing to /my_robot/twist...
 >>> exit()
 ```
 
-
-### Options
-This tool supports using [IPython](http://ipython.org/) if the user has it
-installed. Simply pass the `-i` flag, like so:
+### Other Options
+This tool supports using the [IPython](http://ipython.org/) interpreter instead
+of the default Python one, if the user has IPython installed. Simply pass the
+`-i` flag, like so:
 
 ```
 ./rostopic-repl -i [topic]
