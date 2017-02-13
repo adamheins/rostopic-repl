@@ -1,7 +1,8 @@
+#!/usr/bin/env python
+
 from __future__ import print_function
 
 import argparse
-import code
 import importlib
 import sys
 
@@ -9,10 +10,19 @@ import rospy
 import rostopic
 
 
-def subscribe(topic):
+SUBSCRIBE_MODE_HELP_TEXT = '''
+You're interactively subscribed to a node. The first message is stored in in
+the variable 'msg'.
+
+To get more messages, call 'listen(num)', which waits for num messages to
+arrive and then returns a list containing them.
+'''.strip()
+
+
+def subscribe_mode(topic, use_ipython):
     ''' Subscribe mode. REPL for receiving messages from a topic. '''
 
-    def more(num=1):
+    def listen(num=1):
         ''' Request more messages from the topic. '''
         if num < 1:
             return None
@@ -41,13 +51,20 @@ def subscribe(topic):
             return msgs
 
     def help():
-        print('Not yet implemented.')
+        print(SUBSCRIBE_MODE_HELP_TEXT)
 
-    msg = more()
-    code.interact(local=locals(), banner='')
+    msg = listen()
+
+    try:
+        import IPython
+        IPython.embed(banner1='')
+    except ImportError:
+        import code
+        print('\nCould not import IPython. Using standard interpreter.')
+        code.interact(local=locals(), banner='')
 
 
-def publish(topic):
+def publish_mode(topic, use_ipython):
     ''' Publish mode. REPL for publishing to a topic. '''
     topic_class, _, _ = rostopic.get_topic_class(topic)
     publisher = rospy.Publisher(topic, topic_class, queue_size=1)
@@ -57,7 +74,7 @@ def publish(topic):
     geo = importlib.import_module('geometry_msgs.msg')
     sensor = importlib.import_module('sensor_msgs.msg')
 
-    def pub(msg):
+    def publish(msg):
         ''' Convenient short-form for publisher.publish(msg). '''
         publisher.publish(msg)
 
@@ -66,7 +83,13 @@ def publish(topic):
 
     print('Publishing to {}...'.format(topic))
 
-    code.interact(local=locals(), banner='')
+    try:
+        import IPython
+        IPython.embed(banner1='')
+    except ImportError:
+        import code
+        print('\nCould not import IPython. Using standard interpreter.')
+        code.interact(local=locals(), banner='')
 
 
 def main():
@@ -75,13 +98,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('topic', help='Name of the topic to interact with.')
     parser.add_argument('-p', '--publish', help='Publish mode.', action='store_true')
+    parser.add_argument('-i', '--ipython', help='Use IPython REPL.', action='store_true')
     args = parser.parse_args()
 
-    topic = args.topic
     if args.publish:
-        publish(topic)
+        publish_mode(args.topic, args.ipython)
     else:
-        subscribe(topic)
+        subscribe_mode(args.topic, args.ipython)
 
 
 if __name__ == '__main__':
